@@ -11,7 +11,7 @@ ohsu:
 		-b htan-dcc-ohsu \
 		--bucket-type aws \
 		--profile sandbox-developer \
-		--prefix imaging_level_2
+		--prefix imaging_level_2 \
 		--comprehend_profile htan-dev \
 		> outputs/test_ohsu_output.tsv
 
@@ -19,6 +19,7 @@ hms:
 	python scripts/aws_detect_pii.py \
 		-b htan-dcc-hms \
 		--bucket-type aws \
+		--comprehend_profile htan-dev \
 		--profile sandbox-developer \
 		--comprehend_profile htan-dev \
 		> outputs/test_ohsu_output.tsv
@@ -28,14 +29,14 @@ washu:
 		-b htan-dcc-washu \
 		--bucket-type gcs \
 		--profile htan-dcc-gcs \
-		--prefix h_and_e
+		--prefix h_and_e \
 		--comprehend_profile htan-dev \
 		> outputs/test_washu_output.tsv
 	python scripts/aws_detect_pii.py \
 		-b htan-dcc-washu \
 		--bucket-type gcs \
 		--profile htan-dcc-gcs \
-		--prefix imaging_level_2
+		--prefix imaging_level_2 \ 
 		--comprehend_profile htan-dev \
 		> outputs/test_washu_output.tsv
 
