@@ -274,7 +274,7 @@ def process_args():
     parser.add_argument('-cp', '--comprehend_profile', default='default', type=str, help='AWS profile to use for Comprehend API')
     parser.add_argument('-pr', '--prefix', default='/', help='If you do not supply a prefix, we will iterate through all bucket contents')
     parser.add_argument('-i', '--ignore-prefix', help='We will ignore keys that start with this prefix')
-    parser.add_argument('-l', '--log-level', default=logging.WARNING)
+    parser.add_argument('-l', '--log-level', default=logging.INFO)
     return parser.parse_args()
 
 def main():
@@ -355,7 +355,7 @@ def main():
 
                         else: 
                             pii_entities, stats = detect_pii(comprehend_session, str(tag.value))
-                            logger.info("Size/Chunks/Entities:{}".format(stats))
+                            #logger.info("Size/Chunks/Entities:{}".format(stats))
                         # Write out each line
                             for entity in pii_entities:
                                 result = json.dumps(entity[1])
@@ -363,16 +363,16 @@ def main():
                     # Call detect per image description tag
                     description = tif.pages[0].description
                     if description[:7] == 'Aperio ':
-                        #print("Parsing SVS image description to dict")
+                        logger.info("Parsing SVS image description to dict")
                         description = tifffile.tifffile.svs_description_metadata(description)
                     elif description[-4:] == 'OME>':
-                        #print("Parsing OME-XML image description to dict")
+                        logger.info("Parsing OME-XML image description to dict")
                         description = tifffile.xml2dict(description)
                     elif description[1:] == '<' and description[-1:] == '>':
-                        #print("Parsing XML image description to dict")
+                        logger.info("Parsing XML image description to dict")
                         description = tifffile.xml2dict(description)
                     elif description[:7] == 'ImageJ=':
-                        #print("Parsing ImageJ image description to dict")
+                        logger.info("Parsing ImageJ image description to dict")
                         description = tifffile.imagej_description_metadata(description)
                     else:
                         try:
@@ -381,9 +381,9 @@ def main():
                             description = description
                     description = flatten(description)
                     for d_tag, d_value in description.items():
-                        #print("inspecting tag: " + str(d_tag) + " : " + str(d_value))
+                        #logger.info("inspecting tag: " + str(d_tag) + " : " + str(d_value))
                         d_pii_entities, d_stats = detect_pii(comprehend_session, str(d_value))
-                        logger.info("Size/Chunks/Entities:{}".format(d_stats))
+                        #logger.info("Size/Chunks/Entities:{}".format(d_stats))
                         for d_entity in d_pii_entities:
                             result = json.dumps(d_entity[1])
                             print(f'{s3Bucket}\t {s3Key}\t ImageDescription_{d_tag}\t {d_value}\t {result}')
