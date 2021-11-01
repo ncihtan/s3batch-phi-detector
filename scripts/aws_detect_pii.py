@@ -331,7 +331,7 @@ def main():
             if s3Key.endswith('.txt') or s3Key.endswith('.csv'):
                 logger.info(f"Retrieved: {s3Bucket},{s3Key}")
                 if bucket_type == 'gcs':
-                    ks3Keyey = keys3Key.replace('+', ' ')
+                    s3Key = s3Key.replace('+', ' ')
                 obj = s3.Object(bucket_name=s3Bucket, key=s3Key)
                 data = obj.get()['Body'].read().decode('utf-8')
 
@@ -346,7 +346,7 @@ def main():
 
             elif s3Key.endswith('.ome.tiff') or s3Key.endswith('.ome.tif') or s3Key.endswith('.tif') or s3Key.endswith('.svs'):
                 if bucket_type == 'gcs':
-                    ks3Keyey = keys3Key.replace('+', ' ')
+                    s3Key = s3Key.replace('+', ' ')
                 obj = s3.Object(bucket_name=s3Bucket, key=s3Key)
                 logger.info(f"Retrieved: {s3Bucket},{s3Key}")
                 logger.debug(obj)
