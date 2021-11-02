@@ -13,7 +13,7 @@ ohsu:
 		--profile sandbox-developer \
 		--prefix imaging_level_2 \
 		--comprehend_profile htan-dev \
-		> outputs/test_ohsu_output.tsv
+		> outputs/ohsu_output.tsv
 
 hms:
 	python scripts/aws_detect_pii.py \
@@ -22,7 +22,7 @@ hms:
 		--comprehend_profile htan-dev \
 		--profile sandbox-developer \
 		--comprehend_profile htan-dev \
-		> outputs/test_ohsu_output.tsv
+		> outputs/hms_output.tsv
 
 washu:
 	python scripts/aws_detect_pii.py \
@@ -31,14 +31,14 @@ washu:
 		--profile htan-dcc-gcs \
 		--prefix h_and_e \
 		--comprehend_profile htan-dev \
-		> outputs/test_washu_output.tsv
+		> outputs/washu_he_output.tsv
 	python scripts/aws_detect_pii.py \
 		-b htan-dcc-washu \
 		--bucket-type gcs \
 		--profile htan-dcc-gcs \
 		--prefix imaging_level_2 \ 
 		--comprehend_profile htan-dev \
-		> outputs/test_washu_output.tsv
+		> outputs/washu_imc_output.tsv
 
 vanderbilt:
 	python scripts/aws_detect_pii.py \
@@ -46,7 +46,7 @@ vanderbilt:
 		--bucket-type aws \
 		--profile sandbox-developer \
 		--comprehend_profile htan-dev \
-		> outputs/test_ohsu_output.tsv
+		> outputs/vanderbilt_output.tsv
 
 
 
