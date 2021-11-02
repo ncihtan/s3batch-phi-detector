@@ -375,35 +375,50 @@ def main():
                         logger.info("Parsing SVS image description to dict")
                         description = tifffile.tifffile.svs_description_metadata(description)
                         description = flatten(description)
+                        dtype = "svs"
                     elif description[-4:] == 'OME>':
                         logger.info("Parsing OME-XML image description to dict")
                         description = tifffile.xml2dict(description)
                         description = flatten(description)
+                        dtype = "ome"
                     elif description[1:] == '<' and description[-1:] == '>':
                         logger.info("Parsing XML image description to dict")
                         description = tifffile.xml2dict(description)
                         description = flatten(description)
+                        dtype = "xml"
                     elif description[:7] == 'ImageJ=':
                         logger.info("Parsing ImageJ image description to dict")
                         description = tifffile.imagej_description_metadata(description)
                         description = flatten(description)
+                        dtype = "imagej"
                     else:
                         try:
                             description = tifffile.tifffile.json_description_metadata(description)
                             description = flatten(description)
+                            dtype = "json"
                         except:
                             description = description
-                    logger.info("Checking {} ImageDescription tags".format(str(len(description.items()))))
-                    for d_tag, d_value in description.items():
-                        #logger.info("inspecting tag: " + str(d_tag) + " : " + str(d_value))
-                        try: 
-                            d_pii_entities, d_stats = detect_pii(comprehend_session, str(d_value))
-                        except: 
-                            None
-                        #logger.info("Size/Chunks/Entities:{}".format(d_stats))
-                        for d_entity in d_pii_entities:
-                            result = json.dumps(d_entity[1])
-                            print(f'{s3Bucket}\t {s3Key}\t ImageDescription_{d_tag}\t {d_value}\t {result}')
+                            dtype = "string"
+                    if dtype == "string":
+                        logger.info("Chacking ImageDescription as a single string")
+                        pii_entities, stats = detect_pii(comprehend_session, str(description))
+                        #logger.info("Size/Chunks/Entities:{}".format(stats))
+                        # Write out each line
+                        for entity in pii_entities:
+                            result = json.dumps(entity[1])
+                            print(f'{s3Bucket}\t {s3Key}\t {tag.name}\t {tag.value}\t {result}')
+                    else:
+                        logger.info("Checking {} ImageDescription tags".format(str(len(description.items()))))
+                        for d_tag, d_value in description.items():
+                            #logger.info("inspecting tag: " + str(d_tag) + " : " + str(d_value))
+                            try: 
+                                d_pii_entities, d_stats = detect_pii(comprehend_session, str(d_value))
+                            except: 
+                                None
+                            #logger.info("Size/Chunks/Entities:{}".format(d_stats))
+                            for d_entity in d_pii_entities:
+                                result = json.dumps(d_entity[1])
+                                print(f'{s3Bucket}\t {s3Key}\t ImageDescription_{d_tag}\t {d_value}\t {result}')
             else:
                 logger.info(f"Skipping: {s3Key}")
                 continue
