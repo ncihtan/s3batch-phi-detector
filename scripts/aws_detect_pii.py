@@ -390,7 +390,10 @@ def main():
                     logger.info("Checking {} ImageDescription tags".format(str(len(description.items()))))
                     for d_tag, d_value in description.items():
                         #logger.info("inspecting tag: " + str(d_tag) + " : " + str(d_value))
-                        d_pii_entities, d_stats = detect_pii(comprehend_session, str(d_value))
+                        try: 
+                            d_pii_entities, d_stats = detect_pii(comprehend_session, str(d_value))
+                        except: 
+                            None
                         #logger.info("Size/Chunks/Entities:{}".format(d_stats))
                         for d_entity in d_pii_entities:
                             result = json.dumps(d_entity[1])
