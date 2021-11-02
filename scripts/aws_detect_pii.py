@@ -1,4 +1,3 @@
-import sys
 import argparse
 import io
 import logging
@@ -215,7 +214,8 @@ def detect_pii(session, data: str, chunk_size: int = 4096) -> List[str]:
     for i, chunk in enumerate(split_data):
         if len(chunk) == 0:
             continue
-        pii_results = comprehend.detect_pii_entities(Text=chunk, LanguageCode='en')
+        pii_results = comprehend.detect_pii_entities(
+            Text=chunk, LanguageCode='en')
         entities = pii_results.get('Entities', None)
         if not entities:
             continue
@@ -330,7 +330,7 @@ def main():
 
 
         try:
-            if s3Key.endswith('.txt') or s3Key.endswith('.csv'):
+            if s3Key.endswith('.xxx') or s3Key.endswith('.xxx'):
                 logger.info(f"Retrieved: {s3Bucket},{s3Key}")
                 if bucket_type == 'gcs':
                     s3Key = s3Key.replace('+', ' ')
@@ -356,7 +356,7 @@ def main():
                 with TiffFile(S3File(obj)) as tif:
                     tags = tif.pages[0].tags
                     # Call detect per image tag
-                    logger.info("Checking {} ImageDescription tags".format(str(len(tags.values()))))
+                    logger.info("Checking {} TIFF tags".format(str(len(tags.values()))))
                     for tag in tags.values():
 
                         if any(s in tag.name for s in ignored_tags):
