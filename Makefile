@@ -21,6 +21,7 @@ hms:
 		--bucket-type aws \
 		--comprehend_profile htan-dev \
 		--profile sandbox-developer \
+		--prefix imaging_level_2 \ 
 		--comprehend_profile htan-dev \
 		> outputs/hms_output.tsv
 
