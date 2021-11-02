@@ -213,6 +213,8 @@ def detect_pii(session, data: str, chunk_size: int = 4096) -> List[str]:
 
     results = []
     for i, chunk in enumerate(split_data):
+        if len(chunk) > 0:
+            continue
         pii_results = comprehend.detect_pii_entities(Text=chunk, LanguageCode='en')
         entities = pii_results.get('Entities', None)
         if not entities:
