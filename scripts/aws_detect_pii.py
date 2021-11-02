@@ -374,21 +374,25 @@ def main():
                     if description[:7] == 'Aperio ':
                         logger.info("Parsing SVS image description to dict")
                         description = tifffile.tifffile.svs_description_metadata(description)
+                        description = flatten(description)
                     elif description[-4:] == 'OME>':
                         logger.info("Parsing OME-XML image description to dict")
                         description = tifffile.xml2dict(description)
+                        description = flatten(description)
                     elif description[1:] == '<' and description[-1:] == '>':
                         logger.info("Parsing XML image description to dict")
                         description = tifffile.xml2dict(description)
+                        description = flatten(description)
                     elif description[:7] == 'ImageJ=':
                         logger.info("Parsing ImageJ image description to dict")
                         description = tifffile.imagej_description_metadata(description)
+                        description = flatten(description)
                     else:
                         try:
                             description = tifffile.tifffile.json_description_metadata(description)
+                            description = flatten(description)
                         except:
                             description = description
-                    description = flatten(description)
                     logger.info("Checking {} ImageDescription tags".format(str(len(description.items()))))
                     for d_tag, d_value in description.items():
                         #logger.info("inspecting tag: " + str(d_tag) + " : " + str(d_value))
